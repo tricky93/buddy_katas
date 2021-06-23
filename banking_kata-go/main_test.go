@@ -15,6 +15,8 @@ package main
 // 10/01/2012 || 1000 || 1000
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 )
 
@@ -33,7 +35,7 @@ func TestDeposit(t *testing.T) {
 		desc            string
 		depositAmount   float64
 		expectedBalance float64
-		expectedError   string
+		expectedError   error
 	}{{
 		desc:            "Success - Deposits 500.00",
 		depositAmount:   500.00,
@@ -47,7 +49,7 @@ func TestDeposit(t *testing.T) {
 			desc:            "Fail - Deposits 100.00",
 			depositAmount:   -100.00,
 			expectedBalance: 0,
-			expectedError:   "invalid deposit amount",
+			expectedError:   errors.New("invalid deposit amount"),
 		},
 	}
 
@@ -55,7 +57,7 @@ func TestDeposit(t *testing.T) {
 		a := createNewAccount()
 		err := a.deposit(testCases[i].depositAmount)
 
-		if err != testCases[i].expectedError {
+		if fmt.Sprintf("%v", err) != fmt.Sprintf("%v", testCases[i].expectedError) {
 			t.Errorf("expected error %v. actual error %v", testCases[i].expectedError, err)
 		}
 
